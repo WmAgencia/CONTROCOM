@@ -28,6 +28,10 @@ export enum RemoteCommand {
   NUMBER_7 = 'NUMBER_7',
   NUMBER_8 = 'NUMBER_8',
   NUMBER_9 = 'NUMBER_9',
+  // App shortcuts
+  NETFLIX = 'NETFLIX',
+  YOUTUBE = 'YOUTUBE',
+  PRIME = 'PRIME_VIDEO',
 }
 
 export interface CommandResult {

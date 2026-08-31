@@ -8,6 +8,7 @@ import {
   StatusBar,
   Animated,
   Easing,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -164,7 +165,7 @@ export function DiscoveryScreen({
 
         {searching && devices.length === 0 && (
           <View style={styles.searchingRow}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
+            <ActivityIndicator size="large" color="#007aff" />
           </View>
         )}
 
@@ -192,10 +193,6 @@ export function DiscoveryScreen({
     </SafeAreaView>
   );
 }
-
-const ActivityIndicator = ({ size, color }: { size: string; color: string }) => (
-  <Text style={{ color, fontSize: 16 }}>Buscando...</Text>
-);
 
 const styles = StyleSheet.create({
   container: {

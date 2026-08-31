@@ -38,6 +38,15 @@ export class DemoRemoteAdapter extends RemoteProtocol {
         this.channel = this.channel <= 1 ? 999 : this.channel - 1;
         DeviceEventEmitter.emit('demo:channel', { channel: this.channel });
         return { success: true, status: 'DEMO', channel: this.channel };
+      case 'NETFLIX':
+        DeviceEventEmitter.emit('demo:app', { app: 'Netflix' });
+        return { success: true, status: 'DEMO', app: 'Netflix' };
+      case 'YOUTUBE':
+        DeviceEventEmitter.emit('demo:app', { app: 'YouTube' });
+        return { success: true, status: 'DEMO', app: 'YouTube' };
+      case 'PRIME_VIDEO':
+        DeviceEventEmitter.emit('demo:app', { app: 'Prime Video' });
+        return { success: true, status: 'DEMO', app: 'Prime Video' };
       default:
         return { success: true, status: 'DEMO' };
     }
@@ -115,6 +124,19 @@ export class RemoteService {
       throw new Error('Nenhum adaptador de comunicação conectado. Use modo demonstração.');
     }
     return this.adapter.sendCommand(command);
+  }
+
+  // Convenience methods for app shortcuts
+  async launchNetflix() {
+    return this.sendCommand('NETFLIX');
+  }
+
+  async launchYouTube() {
+    return this.sendCommand('YOUTUBE');
+  }
+
+  async launchPrimeVideo() {
+    return this.sendCommand('PRIME_VIDEO');
   }
 
   private async triggerHaptic(command: string): Promise<void> {

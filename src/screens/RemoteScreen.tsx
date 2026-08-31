@@ -131,7 +131,7 @@ export function RemoteScreen({ navigation }: any) {
             hitSlop={10}
             onPress={() => {
               triggerHaptic();
-              navigation.navigate('Dispositivos');
+              navigation.navigate('devices');
             }}
           >
             <Text style={styles.topLeft}>←</Text>
@@ -141,7 +141,7 @@ export function RemoteScreen({ navigation }: any) {
             hitSlop={10}
             onPress={() => {
               triggerHaptic();
-              navigation.navigate('Configurações');
+              navigation.navigate('settings');
             }}
           >
             <Text style={styles.topRight}>⚙</Text>
@@ -264,11 +264,21 @@ export function RemoteScreen({ navigation }: any) {
           <Text style={styles.sectionLabelText}>ATALHOS</Text>
         </View>
         <View style={styles.row}>
-          <RemoteButton label="NETFLIX" onPress={() => {}} variant="shortcut" size={70} />
-          <RemoteButton label="YOUTUBE" onPress={() => {}} variant="shortcut" size={70} />
+          <RemoteButton
+            label="NETFLIX"
+            onPress={() => sendCommand(RemoteCommand.NETFLIX)}
+            variant="shortcut"
+            size={70}
+          />
+          <RemoteButton
+            label="YOUTUBE"
+            onPress={() => sendCommand(RemoteCommand.YOUTUBE)}
+            variant="shortcut"
+            size={70}
+          />
           <RemoteButton
             label="PRIME"
-            onPress={() => {}}
+            onPress={() => sendCommand(RemoteCommand.PRIME)}
             variant="shortcut"
             size={70}
           />

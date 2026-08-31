@@ -95,7 +95,7 @@ export function SettingsScreen({ onBack, onNavigate }: SettingsScreenProps) {
           <SettingRow
             title="Dispositivos"
             description="Gerenciar TVs conectadas"
-            onPress={() => onNavigate('dispositivos')}
+            onPress={() => onNavigate('devices')}
           />
           <SettingRow
             title="Modo demonstração"
@@ -143,7 +143,7 @@ export function SettingsScreen({ onBack, onNavigate }: SettingsScreenProps) {
           <SettingRow
             title="Diagnóstico"
             description="Ver status e logs"
-            onPress={() => onNavigate('diagnostico')}
+            onPress={() => onNavigate('diagnostics')}
           />
           <SettingRow
             title="Sobre"
