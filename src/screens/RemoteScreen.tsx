@@ -59,9 +59,14 @@ export function RemoteScreen({ navigation }: any) {
 
   useEffect(() => {
     const subs = [
+      // Demo events
       DeviceEventEmitter.addListener('demo:tvState', (state: any) => setTvPower(state.power)),
       DeviceEventEmitter.addListener('demo:volume', (state: any) => setVolume(state.volume)),
       DeviceEventEmitter.addListener('demo:channel', (state: any) => setChannel(state.channel)),
+      // Philips events
+      DeviceEventEmitter.addListener('philips:power', (state: any) => setTvPower(state.power)),
+      DeviceEventEmitter.addListener('philips:volume', (state: any) => setVolume(state.volume)),
+      DeviceEventEmitter.addListener('philips:channel', (state: any) => setChannel(state.channel)),
     ];
     return () => subs.forEach((s) => s.remove());
   }, []);
