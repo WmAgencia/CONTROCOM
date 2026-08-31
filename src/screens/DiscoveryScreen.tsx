@@ -9,11 +9,13 @@ import {
   Animated,
   Easing,
   ActivityIndicator,
+  TextInput,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING } from '../utils/constants';
-import { NetworkDevice } from '../services/DeviceDiscoveryService';
+import { deviceDiscoveryService, NetworkDevice, DiscoveredTV } from '../services/DeviceDiscoveryService';
 
 interface DiscoveryScreenProps {
   onDeviceFound: (device: any) => void;
@@ -28,7 +30,11 @@ export function DiscoveryScreen({
 }: DiscoveryScreenProps) {
   const [status, setStatus] = useState<string>('Inicializando...');
   const [searching, setSearching] = useState(false);
-  const [devices, setDevices] = useState<any[]>([]);
+  const [devices, setDevices] = useState<NetworkDevice[]>([]);
+  const [manualIp, setManualIp] = useState('');
+  const [showManual, setShowManual] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [progress, setProgress] = useState({ current: 0, total: 0 });
   const spinAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -50,49 +56,114 @@ export function DiscoveryScreen({
 
   const startSearch = async () => {
     setSearching(true);
-    setStatus('Procurando dispositivos na rede Wi-Fi...');
+    setStatus('Escaneando rede Wi-Fi em busca de TVs Philips...');
     setDevices([]);
-  };
 
-  const handleConnect = (device: NetworkDevice) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
-    onDeviceFound({ ...device, status: 'DEMO' });
-  };
+    // Configurar callbacks do serviço
+    const service = new (require('../services/DeviceDiscoveryService').DeviceDiscoveryService)(
+      (device: NetworkDevice) => {
+        setDevices((prev) => {
+          if (prev.find((d) => d.id === device.id)) return prev;
+          return [...prev, device];
+        });
+      },
+      (statusMsg: string) => setStatus(statusMsg),
+      (tv: DiscoveredTV) => {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+      }
+    );
 
-  // Simulated device injection (would come from service in real app)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const simulated = [
+    // Iniciar scan REAL
+    setScanning(true);
+    setProgress({ current: 0, total: 508 });
+
+    const found = await service.quickScan((current: number, total: number) => {
+      setProgress({ current, total });
+    });
+
+    setScanning(false);
+
+    if (found.length > 0) {
+      setStatus(`✅ ${found.length} TV(s) Philips encontrada(s)!`);
+    } else {
+      setStatus('Nenhuma TV Philips encontrada. Adicione manualmente ou use o modo demo.');
+      // Adicionar devices demo como fallback
+      const demoDevices: NetworkDevice[] = [
         {
-          id: 'dev-001',
+          id: 'dev-philips',
           name: 'Philips Sala',
           model: '43PFG5100/78',
           brand: 'Philips',
           ip: '192.168.1.45',
-          status: 'DISCONNECTED',
+          port: 1925,
+          status: 'FOUND',
+          supportsJointSpace: true,
         },
         {
-          id: 'dev-002',
+          id: 'dev-lg',
           name: 'LG Quarto',
           model: '43UN7300',
           brand: 'LG',
           ip: '192.168.1.87',
-          status: 'DISCONNECTED',
+          port: 1925,
+          status: 'FOUND',
         },
         {
-          id: 'dev-003',
+          id: 'dev-samsung',
           name: 'Samsung Living',
           model: 'TU8000',
           brand: 'Samsung',
           ip: '192.168.1.103',
-          status: 'DISCONNECTED',
+          port: 1925,
+          status: 'FOUND',
         },
       ];
-      setDevices(simulated);
-      setStatus(`${simulated.length} dispositivo(s) encontrado(s). Escolha qualquer um.`);
-    }, 3500);
-    return () => clearTimeout(timer);
-  }, []);
+
+      setTimeout(() => {
+        setDevices(demoDevices);
+        setStatus('Dispositivos de exemplo. Configure o IP da sua TV para controle real.');
+      }, 1000);
+    }
+  };
+
+  const handleConnect = (device: NetworkDevice) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {});
+    onDeviceFound({
+      ...device,
+      status: 'CONNECTED',
+      isDemo: !device.supportsJointSpace,
+    });
+  };
+
+  const handleManualAdd = async () => {
+    if (!manualIp.trim()) {
+      Alert.alert('IP inválido', 'Digite o IP da sua TV (ex: 192.168.1.45)');
+      return;
+    }
+
+    setScanning(true);
+    setStatus(`Testando ${manualIp}...`);
+
+    const service = new (require('../services/DeviceDiscoveryService').DeviceDiscoveryService)(
+      (device: NetworkDevice) => {
+        setDevices((prev) => {
+          if (prev.find((d) => d.id === device.id)) return prev;
+          return [...prev, device];
+        });
+      },
+      (statusMsg: string) => setStatus(statusMsg)
+    );
+
+    const result = await service.addManualDevice(manualIp);
+
+    setScanning(false);
+
+    if (result) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+      setManualIp('');
+      setShowManual(false);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -108,10 +179,19 @@ export function DiscoveryScreen({
           <Text style={styles.backBtn}>←</Text>
         </Pressable>
         <Text style={styles.title}>Encontrar minha TV</Text>
-        <View style={{ width: 30 }} />
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+            setShowManual(!showManual);
+          }}
+          hitSlop={10}
+        >
+          <Text style={styles.addBtn}>+</Text>
+        </Pressable>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
+        {/* Radar icon */}
         <View style={styles.iconContainer}>
           <Animated.Text
             style={[
@@ -134,13 +214,61 @@ export function DiscoveryScreen({
 
         <Text style={styles.statusText}>{status}</Text>
 
+        {/* Progress bar during scan */}
+        {scanning && progress.total > 0 && (
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${(progress.current / progress.total) * 100}%` },
+                ]}
+              />
+            </View>
+            <Text style={styles.progressText}>
+              {progress.current} / {progress.total} IPs
+            </Text>
+          </View>
+        )}
+
         <Text style={styles.hint}>
-          Seu celular e o dispositivo devem estar na mesma rede Wi-Fi. Qualquer marca ou modelo pode ser conectado.
+          Seu celular e a TV devem estar na mesma rede Wi-Fi. TVs Philips suportam conexão direta pela porta 1925.
         </Text>
 
+        {/* Manual IP Input */}
+        {showManual && (
+          <View style={styles.manualCard}>
+            <Text style={styles.manualTitle}>Adicionar TV manualmente</Text>
+            <Text style={styles.manualSubtitle}>
+              Encontre o IP nas configurações de rede da sua TV
+            </Text>
+            <View style={styles.manualInputRow}>
+              <TextInput
+                style={styles.manualInput}
+                placeholder="192.168.1.45"
+                placeholderTextColor="#666"
+                value={manualIp}
+                onChangeText={setManualIp}
+                keyboardType="numeric"
+                autoCapitalize="none"
+              />
+              <Pressable
+                style={styles.manualBtn}
+                onPress={handleManualAdd}
+                disabled={scanning}
+              >
+                <Text style={styles.manualBtnText}>Testar</Text>
+              </Pressable>
+            </View>
+          </View>
+        )}
+
+        {/* Devices list */}
         {devices.length > 0 && (
           <View style={styles.deviceList}>
-            <Text style={styles.deviceListTitle}>DISPOSITIVOS ENCONTRADOS</Text>
+            <Text style={styles.deviceListTitle}>
+              DISPOSITIVOS ENCONTRADOS ({devices.length})
+            </Text>
             {devices.map((device) => (
               <Pressable
                 key={device.id}
@@ -148,14 +276,22 @@ export function DiscoveryScreen({
                 onPress={() => handleConnect(device)}
               >
                 <View style={styles.deviceRowIcon}>
-                  <Text style={styles.deviceRowIconText}>📺</Text>
+                  <Text style={styles.deviceRowIconText}>
+                    {device.supportsJointSpace ? '📡' : '📺'}
+                  </Text>
                 </View>
                 <View style={styles.deviceRowInfo}>
                   <Text style={styles.deviceRowName}>
-                    {device.name} <Text style={styles.deviceRowBrand}>({device.brand})</Text>
+                    {device.name}{' '}
+                    <Text style={styles.deviceRowBrand}>({device.brand})</Text>
                   </Text>
                   <Text style={styles.deviceRowModel}>{device.model}</Text>
-                  <Text style={styles.deviceRowIP}>{device.ip}</Text>
+                  <Text style={styles.deviceRowIP}>
+                    {device.ip}:{device.port}
+                    {device.supportsJointSpace && (
+                      <Text style={styles.jointSpaceBadge}> • JointSpace ✓</Text>
+                    )}
+                  </Text>
                 </View>
                 <Text style={styles.deviceRowConnect}>Conectar ›</Text>
               </Pressable>
@@ -169,6 +305,7 @@ export function DiscoveryScreen({
           </View>
         )}
 
+        {/* Action buttons */}
         <Pressable
           style={styles.skipBtn}
           onPress={() => {
@@ -176,7 +313,7 @@ export function DiscoveryScreen({
             onSkipToDemo();
           }}
         >
-          <Text style={styles.skipBtnText}>MODO DEMONSTRAÇÃO</Text>
+          <Text style={styles.skipBtnText}>🎮 MODO DEMONSTRAÇÃO</Text>
         </Pressable>
 
         <Pressable
@@ -187,7 +324,7 @@ export function DiscoveryScreen({
             startSearch();
           }}
         >
-          <Text style={styles.retryBtnText}>Tentar novamente</Text>
+          <Text style={styles.retryBtnText}>� Buscar novamente</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
@@ -218,6 +355,12 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
   },
+  addBtn: {
+    color: '#007aff',
+    fontSize: 28,
+    width: 30,
+    textAlign: 'right',
+  },
   content: {
     flexGrow: 1,
     paddingHorizontal: 16,
@@ -242,6 +385,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 8,
+    paddingHorizontal: 16,
   },
   hint: {
     color: '#8e8e93',
@@ -250,6 +394,69 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     lineHeight: 20,
     paddingHorizontal: 16,
+  },
+  progressContainer: {
+    width: '100%',
+    marginBottom: 24,
+    paddingHorizontal: 16,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: '#1c1c1e',
+    borderRadius: 3,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  progressFill: {
+    height: '100%',
+    backgroundColor: '#007aff',
+  },
+  progressText: {
+    color: '#8e8e93',
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  manualCard: {
+    width: '100%',
+    backgroundColor: '#1c1c1e',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  manualTitle: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  manualSubtitle: {
+    color: '#8e8e93',
+    fontSize: 13,
+    marginBottom: 12,
+  },
+  manualInputRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  manualInput: {
+    flex: 1,
+    backgroundColor: '#2c2c2e',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    color: '#ffffff',
+    fontSize: 14,
+  },
+  manualBtn: {
+    backgroundColor: '#007aff',
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    justifyContent: 'center',
+  },
+  manualBtnText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   deviceList: {
     width: '100%',
@@ -304,6 +511,10 @@ const styles = StyleSheet.create({
     fontSize: 11,
     marginTop: 1,
   },
+  jointSpaceBadge: {
+    color: '#34c759',
+    fontWeight: '600',
+  },
   deviceRowConnect: {
     color: '#007aff',
     fontSize: 14,
@@ -316,6 +527,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     marginBottom: 12,
     alignItems: 'center',
+    width: '100%',
   },
   skipBtnText: {
     color: '#007aff',
