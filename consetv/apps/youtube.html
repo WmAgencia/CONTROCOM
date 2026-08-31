@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube - ConsecomTV</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .header {
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f0f0f;
+      border-bottom: 1px solid #272727;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .play-icon {
+      width: 32px;
+      height: 22px;
+      background: #FF0000;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      padding-left: 4px;
+    }
+    .back {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: #272727;
+    }
+    .search {
+      flex: 1;
+      max-width: 600px;
+      margin: 0 40px;
+    }
+    .search input {
+      width: 100%;
+      padding: 10px 16px;
+      background: #121212;
+      border: 1px solid #303030;
+      border-radius: 20px;
+      color: white;
+      font-size: 16px;
+    }
+    .grid {
+      padding: 30px 40px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+    .video {
+      cursor: pointer;
+    }
+    .thumb {
+      aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #272727, #1a1a1a);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .meta { font-size: 13px; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <div class="play-icon">▶</div>
+      <span>YouTube</span>
+    </div>
+    <div class="search">
+      <input type="text" placeholder="Pesquisar">
+    </div>
+    <a href="../index.html" class="back">← Voltar</a>
+  </div>
+
+  <div class="grid">
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Vídeo em destaque 1</div>
+      <div class="meta">Canal • 1.2M views • 2 dias</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Vídeo em destaque 2</div>
+      <div class="meta">Canal • 800K views • 1 semana</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Vídeo em destaque 3</div>
+      <div class="meta">Canal • 500K views • 3 dias</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Vídeo em destaque 4</div>
+      <div class="meta">Canal • 2M views • 5 dias</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Trending video 1</div>
+      <div class="meta">Canal • 3M views • 1 dia</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Trending video 2</div>
+      <div class="meta">Canal • 1.5M views • 1 dia</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Recomendado 1</div>
+      <div class="meta">Canal • 600K views • 4 dias</div>
+    </div>
+    <div class="video">
+      <div class="thumb"></div>
+      <div class="title">Recomendado 2</div>
+      <div class="meta">Canal • 900K views • 2 dias</div>
+    </div>
+  </div>
+</body>
+</html>

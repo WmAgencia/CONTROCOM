@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Prime Video - ConsecomTV</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0E171E;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .header { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 28px; font-weight: 800; color: #00A8E1; }
+    .back { color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+    .hero { padding: 40px 60px; text-align: center; }
+    .hero h1 { font-size: 48px; margin-bottom: 16px; }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+    .btn { padding: 14px 32px; border: none; border-radius: 6px; font-size: 18px; font-weight: 700; background: #00A8E1; color: white; cursor: pointer; }
+    .grid { padding: 30px 60px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .card { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a2935, #0E171E); border-radius: 8px; cursor: pointer; transition: transform 0.3s; }
+    .card:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">prime video</div>
+    <a href="../index.html" class="back">← Voltar</a>
+  </div>
+  <div class="hero">
+    <h1>The Boys</h1>
+    <p>Em um mundo onde super-heróis são celebridades corruptas, um grupo de vigilantes luta para expor a verdade.</p>
+    <button class="btn">▶ Assistir agora</button>
+  </div>
+  <div class="grid">
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+  </div>
+</body>
+</html>

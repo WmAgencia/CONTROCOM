@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Disney+ - ConsecomTV</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0F1014;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .header { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 32px; font-weight: 800; color: #fff; }
+    .back { color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+    .hero { padding: 40px 60px; text-align: center; background: radial-gradient(circle at center, rgba(17, 60, 207, 0.3), transparent); }
+    .hero h1 { font-size: 56px; margin-bottom: 16px; }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+    .btn { padding: 14px 32px; border: none; border-radius: 6px; font-size: 18px; font-weight: 700; background: #113CCF; color: white; cursor: pointer; }
+    .grid { padding: 30px 60px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .card { aspect-ratio: 16/9; background: linear-gradient(135deg, #1a2050, #0F1014); border-radius: 8px; cursor: pointer; transition: transform 0.3s; }
+    .card:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Disney+</div>
+    <a href="../index.html" class="back">← Voltar</a>
+  </div>
+  <div class="hero">
+    <h1>The Mandalorian</h1>
+    <p>A jornada do Mandaloriano através da galáxia de Star Wars.</p>
+    <button class="btn">▶ Assistir</button>
+  </div>
+  <div class="grid">
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+    <div class="card"></div><div class="card"></div><div class="card"></div>
+  </div>
+</body>
+</html>

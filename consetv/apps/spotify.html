@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Spotify - ConsecomTV</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #121212; color: #fff; min-height: 100vh; }
+    .header { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 32px; font-weight: 800; color: #1DB954; }
+    .back { color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; background: rgba(255,255,255,0.1); }
+    .featured { padding: 40px 60px; text-align: center; }
+    .featured h1 { font-size: 48px; margin-bottom: 16px; }
+    .featured p { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 30px; }
+    .btn { padding: 14px 32px; border: none; border-radius: 100px; font-size: 18px; font-weight: 700; background: #1DB954; color: black; cursor: pointer; }
+    .grid { padding: 30px 60px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+    .card { aspect-ratio: 1; background: linear-gradient(135deg, #1a3a2a, #121212); border-radius: 12px; padding: 20px; cursor: pointer; transition: transform 0.3s; }
+    .card:hover { transform: scale(1.05); }
+    .icon { width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 50%; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Spotify</div>
+    <a href="../index.html" class="back">← Voltar</a>
+  </div>
+  <div class="featured">
+    <h1>Suas músicas favoritas</h1>
+    <p>Milhões de músicas e podcasts. Ouça onde quiser.</p>
+    <button class="btn">▶ Ouvir agora</button>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="icon">♪</div><h3>Top Brasil</h3></div>
+    <div class="card"><div class="icon">🎵</div><h3>Sertanejo</h3></div>
+    <div class="card"><div class="icon">🎤</div><h3>Funk</h3></div>
+    <div class="card"><div class="icon">🎸</div><h3>Rock</h3></div>
+    <div class="card"><div class="icon">🎹</div><h3>Pop</h3></div>
+  </div>
+</body>
+</html>

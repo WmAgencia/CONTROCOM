@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Configurações - ConsecomTV</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #000; color: #fff; min-height: 100vh; padding: 60px; }
+    .header { margin-bottom: 40px; }
+    .back { color: #007AFF; text-decoration: none; font-size: 16px; margin-bottom: 20px; display: inline-block; }
+    h1 { font-size: 48px; margin-bottom: 30px; }
+    .section { background: rgba(255,255,255,0.04); border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .section-title { font-size: 14px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 16px; }
+    .row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .row:last-child { border-bottom: none; }
+    .row-name { font-size: 16px; font-weight: 500; }
+    .row-desc { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+    .toggle { width: 50px; height: 30px; background: #007AFF; border-radius: 15px; position: relative; }
+    .toggle::after { content: ''; position: absolute; right: 3px; top: 3px; width: 24px; height: 24px; background: white; border-radius: 50%; }
+    .toggle.off { background: rgba(255,255,255,0.1); }
+    .toggle.off::after { left: 3px; right: auto; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="../index.html" class="back">← Voltar</a>
+    <h1>Configurações</h1>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sistema</div>
+    <div class="row">
+      <div>
+        <div class="row-name">Atualizações automáticas</div>
+        <div class="row-desc">Baixar apps atualizados automaticamente</div>
+      </div>
+      <div class="toggle"></div>
+    </div>
+    <div class="row">
+      <div>
+        <div class="row-name">Notificações</div>
+        <div class="row-desc">Receber notificações do sistema</div>
+      </div>
+      <div class="toggle"></div>
+    </div>
+    <div class="row">
+      <div>
+        <div class="row-name">Modo escuro</div>
+        <div class="row-desc">Tema escuro para reduzir cansaço visual</div>
+      </div>
+      <div class="toggle"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Rede</div>
+    <div class="row">
+      <div>
+        <div class="row-name">Wi-Fi</div>
+        <div class="row-desc">Conectado: Wi-Fi Casa</div>
+      </div>
+      <div style="color: #1DB954;">●</div>
+    </div>
+    <div class="row">
+      <div>
+        <div class="row-name">Bluetooth</div>
+        <div class="row-desc">Conectar dispositivos Bluetooth</div>
+      </div>
+      <div class="toggle off"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Sobre</div>
+    <div class="row">
+      <div>
+        <div class="row-name">Versão do sistema</div>
+        <div class="row-desc">ConsecomTV v2.1.0</div>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <div class="row-name">Desenvolvido por</div>
+        <div class="row-desc">WmAgência © 2024-2026</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
